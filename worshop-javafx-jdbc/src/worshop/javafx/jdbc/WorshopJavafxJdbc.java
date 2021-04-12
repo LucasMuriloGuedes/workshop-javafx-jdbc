@@ -19,6 +19,8 @@ import javafx.stage.Stage;
  */
 public class WorshopJavafxJdbc extends Application {
     
+    private static Scene mainScene;
+    
 @Override
 public void start(Stage primaryStage) { 
     try { 
@@ -28,7 +30,7 @@ public void start(Stage primaryStage) {
         scrollPane.setFitToHeight(true);
         scrollPane.setFitToWidth(true);
         
-        Scene mainScene = new Scene(scrollPane); 
+        mainScene = new Scene(scrollPane); 
         primaryStage.setScene(mainScene); 
         primaryStage.setTitle("Sample JavaFX application"); 
         primaryStage.show(); 
@@ -36,6 +38,13 @@ public void start(Stage primaryStage) {
         e.printStackTrace(); 
      } 
     } 
+
+    public WorshopJavafxJdbc() {
+    }
+
+    public static Scene getMainScene(){
+        return mainScene;
+    }
 
 
     /**
