@@ -7,6 +7,8 @@ package model.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import model.dao.DaoFactory;
+import model.dao.DepartamentDao;
 import model.entites.Departament;
 
 /**
@@ -15,16 +17,11 @@ import model.entites.Departament;
  */
 public class DepartamentService {
     
+    private DepartamentDao dao = DaoFactory.createDepartmentDao();
+    
     public List<Departament> findAll(){
         
-        List<Departament> list = new ArrayList<>();
-        list.add(new Departament(1, "Livros"));
-        list.add(new Departament(2, "Eletronicos"));
-        list.add(new Departament(2, "Gourmet"));
-        
-        
-        return list;
-        
+        return dao.findAll();    
     }
     
 }
