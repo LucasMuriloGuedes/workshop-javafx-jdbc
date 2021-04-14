@@ -1,5 +1,6 @@
 package gui;
 
+import gui.listener.DataChangeListener;
 import gui.util.Alerts;
 import gui.util.Utils;
 import java.awt.Desktop;
@@ -26,7 +27,7 @@ import model.entites.Departament;
 import model.services.DepartamentService;
 import worshop.javafx.jdbc.WorshopJavafxJdbc;
 
-public class DepartamentListController implements Initializable {
+public class DepartamentListController implements Initializable, DataChangeListener {
     
     private DepartamentService service;
     
@@ -89,6 +90,7 @@ public class DepartamentListController implements Initializable {
             DepartamentFormController controller = loader.getController();
             controller.setDepartament(obj);
             controller.setDepartamentService(new DepartamentService());
+            controller.subscribeDataChangeListener(this);
             controller.updateFormData();
             
             Stage dialogStage = new Stage();
@@ -104,5 +106,10 @@ public class DepartamentListController implements Initializable {
             Alerts.showAlert("Io Exception", "Error loading view", e.getMessage(), Alert.AlertType.ERROR);
         }
         
+    }
+
+    @Override
+    public void onDataChanged() {
+        updateTableView();
     }
 }
