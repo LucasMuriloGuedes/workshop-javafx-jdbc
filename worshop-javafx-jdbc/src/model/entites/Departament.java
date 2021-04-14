@@ -16,6 +16,10 @@ public class Departament implements Serializable{
     
     private Integer id;
     private String name;
+    
+    public Departament(){
+        
+    }
 
     public Departament(Integer id, String name) {
         this.id = id;
