@@ -9,9 +9,11 @@ import db.DB;
 import db.DbException;
 import java.lang.invoke.MethodHandles;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,17 +37,84 @@ public class SellerDaoJDBC implements SellerDao{
     
     @Override
     public void insert(Seller seller) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        PreparedStatement st = null;
+        try{
+            st = conn.prepareStatement(
+                    
+                    "INSERT INTO seller "
+                    +"(Name, Email, BirthDate, BaseSalary, DepartmentId) "
+                    +"VALUES "
+                    +"(?, ?, ?, ?, ?)",
+                    Statement.RETURN_GENERATED_KEYS);
+            
+            
+            st.setString(1, seller.getName());
+            st.setString(2, seller.getEmail());
+            st.setDate(3, new Date(seller.getBirthDate().getTime()));
+            st.setDouble(4, seller.getBaseSalary());
+            st.setInt(5, seller.getDepartament().getId());
+            
+            int rowsAffected = st.executeUpdate();
+            
+            if(rowsAffected > 0){
+                ResultSet rs = st.getGeneratedKeys();
+                if(rs.next()){
+                    int id = rs.getInt(1);
+                    seller.setId(id);
+                }
+                DB.closeResultSet(rs);
+            }
+            
+        }catch(SQLException e){
+            
+            throw new DbException(e.getMessage()); 
+        }
     }
 
     @Override
     public void update(Seller seller) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        PreparedStatement st = null;
+        
+        try{
+            st = conn.prepareStatement(                  
+                    "UPDATE seller "
+                    + "SET Name = ?, Email = ?, BirthDate = ?, BaseSalary = ?, DepartmentId = ? "
+                    + "WHERE Id = ?");
+            
+            st.setString(1, seller.getName());
+            st.setString(2, seller.getEmail());
+            st.setDate(3, new Date(seller.getBirthDate().getTime()));
+            st.setDouble(4, seller.getBaseSalary());
+            st.setDouble(5, seller.getDepartament().getId());
+            st.setInt(6, seller.getId());
+            
+            st.executeUpdate();
+        }
+        catch(SQLException e){
+            throw new DbException(e.getMessage());
+        }
+        finally{
+            DB.closePreparedStatment(st);
+        }
     }
 
     @Override
     public void deleteById(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        PreparedStatement st = null;
+        try{
+            st = conn.prepareStatement(
+                    "DELETE FROM seller WHERE Id = ?");
+            st.setInt(1, id);
+            st.executeUpdate();
+            
+        }
+        catch(SQLException e){
+            throw new DbException(e.getMessage());
+            
+        }
+        finally{
+            DB.closePreparedStatment(st);
+        }    
     }
 
     @Override
